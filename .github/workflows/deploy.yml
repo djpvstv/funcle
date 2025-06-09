@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   # Build job
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,6 +41,19 @@ jobs:
         run: npm install
       - name: Build with Rollup
         working-directory: funcle
-        run: npm run deploy
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: funcle/dist
+  # Deploy job
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
