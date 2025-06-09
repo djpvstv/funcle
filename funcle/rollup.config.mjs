@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 export default {
   input: 'src/main.js',
   output: {
-    file: 'public/bundle.js',
+    file: 'dist/bundle.js',
     format: 'es',
     sourcemap: true
   },
@@ -22,10 +22,10 @@ export default {
     json(),      // Allows importing JSON files
     isDev && serve({  // Serve and live reloading from debug mode
       open: true,
-      contentBase: 'public',
+      contentBase: 'dist',
       port: 3000
     }),
-    isDev && livereload('public'),
+    isDev && livereload('dist'),
     alias({      // Avoid relative paths and get references to three main data paths
       entries: [
         { find: '@src', replacement: path.resolve(__dirname, 'src')},
