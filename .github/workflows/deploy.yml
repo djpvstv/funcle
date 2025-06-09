@@ -56,5 +56,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: NPM Deploy
         run: npm run deploy
+        working-directory: funcle
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
