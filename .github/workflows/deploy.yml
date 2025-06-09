@@ -43,7 +43,7 @@ jobs:
         working-directory: funcle
         run: npm run build
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: funcle/dist
   # Deploy job
