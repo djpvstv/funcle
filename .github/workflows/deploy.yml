@@ -1,5 +1,5 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+# Sample workflow for building and deploying a Node.js site to GitHub Pages
+name: Deploy Node.js with GitHub Pages dependencies preinstalled
 
 on:
   # Runs on pushes targeting the default branch
@@ -33,14 +33,16 @@ jobs:
         with:
           node-version: '20'
       - name: Install dependencies
+        working-directory: funcle
         run: npm install
       - name: Build with Rollup
+        working-directory: funcle
         run: npm run build
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist
+          path: funcle/dist
 
   # Deployment job
   deploy:
@@ -54,7 +56,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: dist
+          path: funcle/dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
