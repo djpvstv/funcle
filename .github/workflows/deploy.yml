@@ -39,7 +39,7 @@ jobs:
         working-directory: funcle
         run: npm run build
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           path: funcle/dist
 
