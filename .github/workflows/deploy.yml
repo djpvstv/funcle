@@ -38,10 +38,9 @@ jobs:
       - name: Build with Rollup
         working-directory: funcle
         run: npm run build
-      - name: Upload build output
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
           path: funcle/dist
 
   # Deployment job
