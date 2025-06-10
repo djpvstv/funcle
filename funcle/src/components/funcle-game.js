@@ -1,12 +1,14 @@
 import { LitElement, html, css } from 'lit';
 import '@src/components/funcle-input.js';
+import '@src/components/funcle-keys.js';
 import gameKeys from "@data/list.json" assert {type: 'json'};
 
 class FuncleGame extends LitElement {
   static properties = {
     activeRow: { type: Number },
     activeRowErrorState: { type: Boolean },
-    dictionaryReady: { type: Boolean }
+    dictionaryReady: { type: Boolean },
+    lastKey: { type: String }
   };
 
   static styles = css`
@@ -32,6 +34,8 @@ class FuncleGame extends LitElement {
     this.numberOfRows = 6;
     this.activeRowErrorState = false;
     this.dictionaryReady = false;
+    this.lastKey = '';
+
     this.wordSet = new Set();
     this.guessAttempts = Array(this.numberOfRows).fill(false);
     this.positionValues = Array(this.numberOfRows).fill(Array(this.NUMBER_OF_LETTERS));
@@ -96,6 +100,11 @@ class FuncleGame extends LitElement {
     this.requestUpdate();
   }
 
+  _handleKeyPress (e) {
+    this.lastKey = e.detail;
+    this.shadowRoot.querySelector('funcle-input-row')?.handleKeyFromClick(e.detail);
+  }
+
   _clearError (e) {
     this.activeRowErrorState = false;
   }
@@ -122,6 +131,7 @@ class FuncleGame extends LitElement {
         ${Array.from(Array(this.numberOfRows).keys()).map(i => html`
           <funcle-input-row
             .numberOfLetters=${this.NUMBER_OF_LETTERS}
+            .keyInput=${this.lastKey}
             .active=${this.activeRow === i}
             .errorState=${this.activeRowErrorState}
             .guessAttempt=${this.guessAttempts[i]}
@@ -133,6 +143,9 @@ class FuncleGame extends LitElement {
             })}>
           </funcle-input-row>
         `)}
+        <funcle-keys
+            @key-pressed=${this._handleKeyPress}
+        ></funcle-keys>
       </div>
     `;
   }

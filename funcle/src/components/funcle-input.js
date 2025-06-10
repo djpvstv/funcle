@@ -7,7 +7,8 @@ class FuncleInputRow extends LitElement {
     errorState: { type: Boolean },
     guessAttempt: { type: Boolean },
     correctLetter: { type: Array },
-    correctLetterAndPosition: { type: Array }
+    correctLetterAndPosition: { type: Array },
+    lastKey: { type: String}
   };
 
   static styles = css`
@@ -16,6 +17,10 @@ class FuncleInputRow extends LitElement {
       src: url('../fonts/CONSOLA.tff') format('truetype');
       font-weight: normal;
       font-style: normal;
+    }
+    .row-wrapper {
+      display: flex;
+      align-items: center;
     }
     .grid {
       display: flex;
@@ -34,25 +39,35 @@ class FuncleInputRow extends LitElement {
     }
     .square.active {
       border-color:rgb(221, 146, 8);
-      background-color: #eeeee4;
+      background-color:rgba(238, 238, 228, 0.51);
     }
     .square.allCorrect {
       border-color: rgb(11, 104, 8);
-      background-color: rgb(131, 235, 117);
+      background-color: rgba(131, 235, 117, 0.42);
     }
     .square.correctLetter {
       border-color: rgb(209, 192, 37);
-      background-color: rgb(255, 227, 150);
+      background-color: rgba(255, 227, 150, 0.4);
     }
     .square.incorrect {
       border-color: rgb(30, 30, 30);
-      background-color: rgb(200, 200, 200);
+      background-color: rgba(200, 200, 200, 0.86);
     }
     .square.error {
       border-color: rgb(256, 0, 0);
     }
     div {
       font-family: 'Consolas', sans-serif;
+    }
+    .chevron {
+      width: 2rem;
+      font-size: 2rem;
+      text-align: right;
+      font-family: monospace;
+      margin-right: 0.5rem;
+    }
+    .chevron.placeholder {
+      visibility: hidden;
     }
   `;
 
@@ -65,17 +80,18 @@ class FuncleInputRow extends LitElement {
     this.guessAttempt = false;
     this.correctLetter = [];
     this.correctLetterAndPosition = [];
+    this.lastKey = '';
 
     // State variables
     this.letters = [""];
     this.activeIndex = null;
-    this._handleKey = this._handleKey.bind(this);
+    this._handleKeyFunc = this._handleKeyFromKeyboard.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.letters = Array(this.numberOfLetters).fill("");
-    window.addEventListener('keydown', this._handleKey);
+    window.addEventListener('keydown', this._handleKeyFunc);
     if (this.activeIndex === null) {
       this.activeIndex = 0;
       this.requestUpdate();
@@ -89,11 +105,19 @@ class FuncleInputRow extends LitElement {
     }
   }
 
-  _handleKey(e) {
+  handleKeyFromClick (key) {
+    this._handleKey(key);
+  }
+
+  _handleKeyFromKeyboard (e) {
+    this._handleKey(e.key);
+  }
+
+  _handleKey (e) {
     // Ignore unless the selected box in row
     if (!this.active) return;
 
-    const key = e.key.toLowerCase();
+    const key = e.toLowerCase();
     if (/^[a-z0-9]$/.test(key)) {
       if (this.activeIndex < 5) {
         this.letters[this.activeIndex] = key;
@@ -102,7 +126,7 @@ class FuncleInputRow extends LitElement {
         this._sendClearErrorEvent();
       }
       this.requestUpdate();
-    } else if (e.key === 'Backspace') {
+    } else if (e === 'Backspace') {
       if (this.activeIndex > 0) {
         this.letters[this.activeIndex - 1] = '';
         this.activeIndex = this.activeIndex - 1;
@@ -110,7 +134,7 @@ class FuncleInputRow extends LitElement {
       }
       this.letters = [...this.letters];
       this.requestUpdate();
-    } else if (e.key === "Enter") {
+    } else if (e === "Enter") {
       this._sendGuessEvent();
     }
   }
@@ -136,19 +160,22 @@ class FuncleInputRow extends LitElement {
 
   render() {
     return html`
-      <div class="grid">
-        ${this.letters.map((letter, i) => html`
-          <div
-            class="square
-              ${this.active && this.activeIndex === i ? 'active' : ''}
-              ${this.active && this.errorState ? 'error' : ''}
-              ${this.guessAttempt && this.correctLetter[i] ? 'correctLetter' : ''}
-              ${this.guessAttempt && this.correctLetterAndPosition[i] ? 'allCorrect' : ''}
-              ${this.guessAttempt && !this.correctLetter[i] && !this.correctLetterAndPosition[i] ? 'incorrect' : ''}"
-          >
-            ${letter}
-          </div>
-        `)}
+      <div class="row-wrapper">
+        ${this.active ? html`<div class="chevron">>></div>` : html`<div class="chevron placeholder"></div>`}
+        <div class="grid">
+          ${this.letters.map((letter, i) => html`
+            <div
+              class="square
+                ${this.active && this.activeIndex === i ? 'active' : ''}
+                ${this.active && this.errorState ? 'error' : ''}
+                ${this.guessAttempt && this.correctLetter[i] ? 'correctLetter' : ''}
+                ${this.guessAttempt && this.correctLetterAndPosition[i] ? 'allCorrect' : ''}
+                ${this.guessAttempt && !this.correctLetter[i] && !this.correctLetterAndPosition[i] ? 'incorrect' : ''}"
+            >
+              ${letter}
+            </div>
+          `)}
+        </div>
       </div>
     `;
   }
