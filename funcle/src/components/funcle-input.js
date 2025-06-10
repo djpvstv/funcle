@@ -2,11 +2,12 @@ import { LitElement, html, css } from 'lit';
 
 class FuncleInputRow extends LitElement {
   static properties = {
+    numberOfLetters: { type: Number },
     active: {type: Boolean},
     errorState: { type: Boolean },
     guessAttempt: { type: Boolean },
-    correctLetter: { type: Boolean },
-    correctLetterAndPosition: { type: Boolean }
+    correctLetter: { type: Array },
+    correctLetterAndPosition: { type: Array }
   };
 
   static styles = css`
@@ -35,6 +36,18 @@ class FuncleInputRow extends LitElement {
       border-color:rgb(221, 146, 8);
       background-color: #eeeee4;
     }
+    .square.allCorrect {
+      border-color: rgb(11, 104, 8);
+      background-color: rgb(131, 235, 117);
+    }
+    .square.correctLetter {
+      border-color: rgb(209, 192, 37);
+      background-color: rgb(255, 227, 150);
+    }
+    .square.incorrect {
+      border-color: rgb(30, 30, 30);
+      background-color: rgb(200, 200, 200);
+    }
     .square.error {
       border-color: rgb(256, 0, 0);
     }
@@ -45,29 +58,27 @@ class FuncleInputRow extends LitElement {
 
   constructor() {
     super();
-    this.NUMBER_OF_LETTERS = 5;
 
     // Reactive properties
     this.active = false;
     this.errorState = false;
     this.guessAttempt = false;
-    this.correctLetter = false;
-    this.correctLetterAndPosition = false;
+    this.correctLetter = [];
+    this.correctLetterAndPosition = [];
 
     // State variables
-    this.letters = Array(this.NUMBER_OF_LETTERS).fill("");
+    this.letters = [""];
     this.activeIndex = null;
     this._handleKey = this._handleKey.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.active) {
-      window.addEventListener('keydown', this._handleKey);
-      if (this.activeIndex === null) {
-        this.activeIndex = 0;
-        this.requestUpdate();
-      }
+    this.letters = Array(this.numberOfLetters).fill("");
+    window.addEventListener('keydown', this._handleKey);
+    if (this.activeIndex === null) {
+      this.activeIndex = 0;
+      this.requestUpdate();
     }
   }
 
@@ -80,7 +91,7 @@ class FuncleInputRow extends LitElement {
 
   _handleKey(e) {
     // Ignore unless the selected box in row
-    if (this.activeIndex === null) return;
+    if (!this.active) return;
 
     const key = e.key.toLowerCase();
     if (/^[a-z0-9]$/.test(key)) {
@@ -114,7 +125,7 @@ class FuncleInputRow extends LitElement {
 
   _sendGuessEvent () {
     const guessWord = this.letters.join('');
-    if (guessWord.length === this.NUMBER_OF_LETTERS) {
+    if (guessWord.length === this.numberOfLetters) {
       this.dispatchEvent(new CustomEvent('guess-enter', {
         detail: guessWord,
         bubbles: true,
@@ -129,8 +140,11 @@ class FuncleInputRow extends LitElement {
         ${this.letters.map((letter, i) => html`
           <div
             class="square
-              ${this.activeIndex === i ? 'active' : ''}
-              ${this.errorState && this.active ? 'error' : ''}"
+              ${this.active && this.activeIndex === i ? 'active' : ''}
+              ${this.active && this.errorState ? 'error' : ''}
+              ${this.guessAttempt && this.correctLetter[i] ? 'correctLetter' : ''}
+              ${this.guessAttempt && this.correctLetterAndPosition[i] ? 'allCorrect' : ''}
+              ${this.guessAttempt && !this.correctLetter[i] && !this.correctLetterAndPosition[i] ? 'incorrect' : ''}"
           >
             ${letter}
           </div>

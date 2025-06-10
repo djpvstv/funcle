@@ -25,11 +25,16 @@ class FuncleGame extends LitElement {
 
   constructor() {
     super();
+
+    this.NUMBER_OF_LETTERS = 5;
+
     this.activeRow = 0;
     this.numberOfRows = 6;
     this.activeRowErrorState = false;
     this.dictionaryReady = false;
     this.wordSet = new Set();
+    this.guessAttempts = Array(this.numberOfRows).fill(false);
+    this.positionValues = Array(this.numberOfRows).fill(Array(this.NUMBER_OF_LETTERS));
 
     this.code = '';
   }
@@ -61,11 +66,34 @@ class FuncleGame extends LitElement {
     }
 
     // Logic for checking against keyword
+    const tempPositions = Array(this.NUMBER_OF_LETTERS).fill(0);
+    const code = this.code;
+    const guessArr = [...guess];
+    const letterCount = {};
 
-    // if (this.activeRow < 4) {
-    //   this.activeRow++;
-    //   this.requestUpdate();32r
-    // }
+    for (let i = 0; i < this.NUMBER_OF_LETTERS; i++) {
+       if (guessArr[i] === code[i]) {
+        tempPositions[i] = 2;
+       } else {
+        const c = code[i];
+        letterCount[c] = (letterCount[c] || 0) + 1;
+       }
+    }
+
+    for (let i = 0; i < this.NUMBER_OF_LETTERS; i++) {
+      if (tempPositions[i] === 0) {
+        const g = guessArr[i];
+        if (letterCount[g]) {
+          tempPositions[i] = 1;
+          letterCount[g]--;
+        }
+      }
+    }
+
+    this.guessAttempts[this.activeRow] = true;
+    this.positionValues[this.activeRow] = tempPositions;
+    this.activeRow++;
+    this.requestUpdate();
   }
 
   _clearError (e) {
@@ -93,9 +121,16 @@ class FuncleGame extends LitElement {
       >
         ${Array.from(Array(this.numberOfRows).keys()).map(i => html`
           <funcle-input-row
-            ?active=${this.activeRow === i}
-            ?errorState=${this.activeRowErrorState}>
-            ?guessAttempt=${}
+            .numberOfLetters=${this.NUMBER_OF_LETTERS}
+            .active=${this.activeRow === i}
+            .errorState=${this.activeRowErrorState}
+            .guessAttempt=${this.guessAttempts[i]}
+            .correctLetter=${this.positionValues[i].map(v => {
+              return v === 1;
+            })}
+            .correctLetterAndPosition=${this.positionValues[i].map(v => {
+              return v === 2;
+            })}>
           </funcle-input-row>
         `)}
       </div>
