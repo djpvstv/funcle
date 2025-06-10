@@ -4,7 +4,8 @@ import gameKeys from "@data/list.json" assert {type: 'json'};
 
 class FuncleGame extends LitElement {
   static properties = {
-    activeRow: { ype: Number },
+    activeRow: { type: Number },
+    activeRowErrorState: { type: Boolean },
     dictionaryReady: { type: Boolean }
   };
 
@@ -22,6 +23,7 @@ class FuncleGame extends LitElement {
     super();
     this.activeRow = 0;
     this.numberOfRows = 6;
+    this.activeRowErrorState = false;
     this.dictionaryReady = false;
     this.wordSet = new Set();
 
@@ -49,13 +51,18 @@ class FuncleGame extends LitElement {
 
     // Check if guess is a valid function
     if (!this.wordSet.has(guess)) {
-      
-    }
-
-    if (this.activeRow < 4) {
-      this.activeRow++;
+      this.activeRowErrorState = true;
       this.requestUpdate();
     }
+
+    // if (this.activeRow < 4) {
+    //   this.activeRow++;
+    //   this.requestUpdate();32r
+    // }
+  }
+
+  _clearError (e) {
+    this.activeRowErrorState = false;
   }
 
   _pseudoRandomGen (max) {
@@ -75,9 +82,10 @@ class FuncleGame extends LitElement {
       <div
         class="game"
         @guess-enter=${this._onGuessEnter}
+        @clear-error=${this._clearError}
       >
         ${Array.from(Array(this.numberOfRows).keys()).map(i => html`
-          <funcle-input-row ?active=${this.activeRow === i}></funcle-input-row>
+          <funcle-input-row ?active=${this.activeRow === i} ?errorState=${this.activeRowErrorState}></funcle-input-row>
         `)}
       </div>
     `;

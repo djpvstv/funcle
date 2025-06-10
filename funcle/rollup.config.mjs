@@ -5,6 +5,7 @@ import livereload from 'rollup-plugin-livereload';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import replace from '@rollup/plugin-replace';
 
 const isDev = process.env.ROLLUP_WATCH === 'true';
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,10 @@ export default {
         { find: '@data', replacement: path.resolve(__dirname, 'data')},
         { find: '@fonts', replacement: path.resolve(__dirname, 'fonts')}
       ]
+    }),
+    replace({    // Correct the base for local and github pages
+      preventAssignment: true,
+      __BASE_HREF__: JSON.stringify(process.env.BASE_HREF || '/')
     })
   ]
 };

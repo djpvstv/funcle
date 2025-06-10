@@ -2,7 +2,8 @@ import { LitElement, html, css } from 'lit';
 
 class FuncleInputRow extends LitElement {
   static properties = {
-    active: {type: Boolean}
+    active: {type: Boolean},
+    errorState: { type: Boolean }
   };
 
   static styles = css`
@@ -28,8 +29,11 @@ class FuncleInputRow extends LitElement {
       text-transform: lowercase;
     }
     .square.active {
-      border-color: #00aaff;
-      background-color: #eef;
+      border-color:rgb(221, 146, 8);
+      background-color: #eeeee4;
+    }
+    .square.error {
+      border-color: rgb(256, 0, 0);
     }
     div {
       font-family: 'Consolas', sans-serif;
@@ -40,9 +44,13 @@ class FuncleInputRow extends LitElement {
     super();
     this.NUMBER_OF_LETTERS = 5;
 
+    // Reactive properties
+    this.active = false;
+    this.errorState = false;
+
+    // State variables
     this.letters = Array(this.NUMBER_OF_LETTERS).fill("");
     this.activeIndex = null;
-    this.active = false;
     this._handleKey = this._handleKey.bind(this);
   }
 
@@ -70,23 +78,42 @@ class FuncleInputRow extends LitElement {
 
     const key = e.key.toLowerCase();
     if (/^[a-z0-9]$/.test(key)) {
-      this.letters[this.activeIndex] = key;
-      this.letters = [...this.letters]; // reassign to trigger re-render
-      this.activeIndex = (this.activeIndex + 1) % this.NUMBER_OF_LETTERS;
+      if (this.activeIndex < 5) {
+        this.letters[this.activeIndex] = key;
+        this.letters = [...this.letters]; // reassign to trigger re-render
+        this.activeIndex = (this.activeIndex + 1);
+        this._sendClearErrorEvent();
+      }
       this.requestUpdate();
-    } else if (e.key === 'Backspace') {3
-      this.letters[this.activeIndex] = '';
+    } else if (e.key === 'Backspace') {
+      if (this.activeIndex > 0) {
+        this.letters[this.activeIndex - 1] = '';
+        this.activeIndex = this.activeIndex - 1;
+        this._sendClearErrorEvent();
+      }
       this.letters = [...this.letters];
       this.requestUpdate();
     } else if (e.key === "Enter") {
-      const guessWord = this.letters.join('');
-      if (guessWord.length === this.NUMBER_OF_LETTERS) {
-        this.dispatchEvent(new CustomEvent('guess-enter', {
-          detail: guessWord,
-          bubbles: true,
-          composed: true
-        }));
-      }
+      this._sendGuessEvent();
+    }
+  }
+
+  _sendClearErrorEvent () {
+    this.dispatchEvent(new CustomEvent('clear-error', {
+      detail: true,
+      bubbles: true,
+      composed: true
+    }))
+  }
+
+  _sendGuessEvent () {
+    const guessWord = this.letters.join('');
+    if (guessWord.length === this.NUMBER_OF_LETTERS) {
+      this.dispatchEvent(new CustomEvent('guess-enter', {
+        detail: guessWord,
+        bubbles: true,
+        composed: true
+      }));
     }
   }
 
@@ -103,7 +130,9 @@ class FuncleInputRow extends LitElement {
       <div class="grid">
         ${this.letters.map((letter, i) => html`
           <div
-            class="square ${this.activeIndex === i ? 'active' : ''}"
+            class="square
+              ${this.activeIndex === i ? 'active' : ''}
+              ${this.errorState && this.active ? 'error' : ''}"
             @click=${() => this._onClick(i)}
           >
             ${letter}
