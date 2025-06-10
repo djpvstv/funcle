@@ -1,3 +1,4 @@
 /funcle/node_modules
 funcle/dist/bundle.*.js.map
 funcle/dist/bundle.*.js
+funcle/dist/index.html

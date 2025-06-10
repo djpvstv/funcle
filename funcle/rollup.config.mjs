@@ -54,7 +54,6 @@ export default {
     <meta charset="UTF-8" />
     <title>${title}</title>
     <base href="${baseHref}"/>
-    ${(meta || []).join('\n')}
   </head>
   <body>
     <funcle-app></funcle-app>
