@@ -11,6 +11,7 @@ class FuncleHeader extends LitElement {
         }
 
         div {
+            flex: 0 0 auto;
             font-family: 'Consolas', sans-serif;
             display: flex;
             flex-direction: column;

@@ -10,12 +10,16 @@ class FuncleGame extends LitElement {
   };
 
   static styles = css`
+    :host {
+      display: block;
+      flex: 1 1 auto;
+    }
     .game {
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: 0.3rem;
       align-items: center;
-      margin-top: 2rem;
     }
   `;
 
