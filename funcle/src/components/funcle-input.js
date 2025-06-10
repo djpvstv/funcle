@@ -117,14 +117,6 @@ class FuncleInputRow extends LitElement {
     }
   }
 
-  _onClick(index) {
-    // Ignore unless the current row is active
-    if (!this.active) return;
-
-    this.activeIndex = index;
-    this.requestUpdate();
-  }
-
   render() {
     return html`
       <div class="grid">
@@ -133,7 +125,6 @@ class FuncleInputRow extends LitElement {
             class="square
               ${this.activeIndex === i ? 'active' : ''}
               ${this.errorState && this.active ? 'error' : ''}"
-            @click=${() => this._onClick(i)}
           >
             ${letter}
           </div>

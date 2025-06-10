@@ -6,6 +6,8 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import replace from '@rollup/plugin-replace';
+import html from '@rollup/plugin-html';
+import del from 'rollup-plugin-delete';
 
 const isDev = process.env.ROLLUP_WATCH === 'true';
 const __filename = fileURLToPath(import.meta.url);
@@ -14,9 +16,10 @@ const __dirname = path.dirname(__filename);
 export default {
   input: 'src/main.js',
   output: {
-    file: 'dist/bundle.js',
+    dir: 'dist',
     format: 'es',
-    sourcemap: true
+    sourcemap: true,
+    entryFileNames: 'bundle.[hash].js'
   },
   plugins: [
     resolve(),   // Resolves lit and other node modules
@@ -37,6 +40,32 @@ export default {
     replace({    // Correct the base for local and github pages
       preventAssignment: true,
       __BASE_HREF__: JSON.stringify(process.env.BASE_HREF || '/')
+    }),
+    html({       // Generate an HTML but use the correct hash
+      title: 'Funcle',
+      template: ({ attributes, files, meta, publicPath, title }) => {
+        const scripts = (files.js || [])
+          .map(({ fileName }) => `<script type="module" src="${publicPath}${fileName}"></script>`)
+          .join('\n');
+        const baseHref = process.env.BASE_HREF || '/';
+        return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>${title}</title>
+    <base href="${baseHref}"/>
+    ${(meta || []).join('\n')}
+  </head>
+  <body>
+    <funcle-app></funcle-app>
+    ${scripts}
+  </body>
+</html>
+        `;
+      }
+    }),
+    del({       // Clean up dist file
+      targets: 'dist/*'
     })
   ]
 };

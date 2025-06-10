@@ -53,7 +53,10 @@ class FuncleGame extends LitElement {
     if (!this.wordSet.has(guess)) {
       this.activeRowErrorState = true;
       this.requestUpdate();
+      return;
     }
+
+    // Logic for checking against keyword
 
     // if (this.activeRow < 4) {
     //   this.activeRow++;
