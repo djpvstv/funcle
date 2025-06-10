@@ -92,7 +92,11 @@ class FuncleGame extends LitElement {
         @clear-error=${this._clearError}
       >
         ${Array.from(Array(this.numberOfRows).keys()).map(i => html`
-          <funcle-input-row ?active=${this.activeRow === i} ?errorState=${this.activeRowErrorState}></funcle-input-row>
+          <funcle-input-row
+            ?active=${this.activeRow === i}
+            ?errorState=${this.activeRowErrorState}>
+            ?guessAttempt=${}
+          </funcle-input-row>
         `)}
       </div>
     `;

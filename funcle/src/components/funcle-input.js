@@ -3,7 +3,10 @@ import { LitElement, html, css } from 'lit';
 class FuncleInputRow extends LitElement {
   static properties = {
     active: {type: Boolean},
-    errorState: { type: Boolean }
+    errorState: { type: Boolean },
+    guessAttempt: { type: Boolean },
+    correctLetter: { type: Boolean },
+    correctLetterAndPosition: { type: Boolean }
   };
 
   static styles = css`
@@ -18,12 +21,12 @@ class FuncleInputRow extends LitElement {
       gap: 0.3rem;
     }
     .square {
-      width: 50px;
-      height: 50px;
-      border: 2px solid #555;
+      width: 3rem;
+      height: 3rem;
+      border: 0.15rem solid #555;
       font-size: 2rem;
       text-align: center;
-      line-height: 60px;
+      line-height: 3.5rem;
       cursor: pointer;
       user-select: none;
       text-transform: lowercase;
@@ -47,6 +50,9 @@ class FuncleInputRow extends LitElement {
     // Reactive properties
     this.active = false;
     this.errorState = false;
+    this.guessAttempt = false;
+    this.correctLetter = false;
+    this.correctLetterAndPosition = false;
 
     // State variables
     this.letters = Array(this.NUMBER_OF_LETTERS).fill("");
