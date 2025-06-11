@@ -142,6 +142,7 @@
         "evrnd",
         "exist",
         "expmv",
+        "false",
         "fbode",
         "feasp",
         "feval",
@@ -588,7 +589,8 @@
         "zgrid",
         "zp2ss",
         "zp2tf",
-        "ztest"
+        "ztest",
+        "zeros"
     ],
     "six": [
         "CANMsg",

@@ -10,7 +10,6 @@ class App extends LitElement {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(180deg, #268cdd,rgb(231, 228, 44), #268cdd);
             background-size: 100% 300%;
             animation: moveBackground 300s ease-in-out infinite;
         }
@@ -21,6 +20,17 @@ class App extends LitElement {
             }
             to {
                 background-position: 0% -1000%;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .main {
+                background: linear-gradient(185deg, #268cdd,rgb(231, 228, 44), #268cdd);
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            .main {
+                background: linear-gradient(175deg,rgb(9, 29, 46),rgb(82, 80, 15), rgb(9, 29, 46));
             }
         }
     `;

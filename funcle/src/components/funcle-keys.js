@@ -19,7 +19,33 @@ class FuncleKeys extends LitElement {
                 gap: 0.1rem;
                 justify-content: center;
                 padding-bottom: 0.5rem;
-            }        
+            }
+                
+            button.key {
+                position: relative;
+                z-index: 1;
+                background: transparent;
+                font-size: 1rem;
+                padding: 0.4rem 0.2rem;
+                font-family: monospace;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            @media (prefers-color-scheme: light) {
+                button.key {
+                    color: black;
+                }
+            }
+
+            @media (prefers-color-scheme: dark) {
+                button.key {
+                    color: white;
+                }
+            }
         `];
 
     static properties = {

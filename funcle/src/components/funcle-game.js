@@ -28,7 +28,12 @@ class FuncleGame extends LitElement {
   constructor() {
     super();
 
-    this.NUMBER_OF_LETTERS = 5;
+    const params = new URLSearchParams(window.location.search);
+    let nol = Number(params.get('difficulty')) || 5;
+    if (nol > 8 || nol < 5) {
+      nol = 5;
+    }
+    this.NUMBER_OF_LETTERS = nol;
 
     this.activeRow = 0;
     this.numberOfRows = 6;
@@ -57,6 +62,11 @@ class FuncleGame extends LitElement {
     this.wordSet = new Set(gameKeys.five.map(w => w.toLowerCase()));
     this.dictionaryReady = true;
     this.requestUpdate();
+  }
+
+  _getActiveRow () {
+    const rows = this.shadowRoot.querySelectorAll('funcle-input-row');
+    return rows[this.activeRow];
   }
 
   _onGuessEnter(e) {
@@ -102,7 +112,7 @@ class FuncleGame extends LitElement {
 
   _handleKeyPress (e) {
     this.lastKey = e.detail;
-    this.shadowRoot.querySelector('funcle-input-row')?.handleKeyFromClick(e.detail);
+    this._getActiveRow()?.handleKeyFromClick(e.detail);
   }
 
   _clearError (e) {

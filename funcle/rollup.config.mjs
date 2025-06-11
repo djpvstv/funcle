@@ -22,14 +22,10 @@ export default {
     entryFileNames: 'bundle.[hash].js'
   },
   plugins: [
-    resolve(),   // Resolves lit and other node modules
-    json(),      // Allows importing JSON files
-    isDev && serve({  // Serve and live reloading from debug mode
-      open: true,
-      contentBase: 'dist',
-      port: 3000
+    ,
+    !isDev && del({       // Clean up dist file
+      targets: 'dist/*'
     }),
-    isDev && livereload('dist'),
     alias({      // Avoid relative paths and get references to three main data paths
       entries: [
         { find: '@src', replacement: path.resolve(__dirname, 'src')},
@@ -41,6 +37,8 @@ export default {
       preventAssignment: true,
       __BASE_HREF__: JSON.stringify(process.env.BASE_HREF || '/')
     }),
+    resolve(),   // Resolves lit and other node modules
+    json(),      // Allows importing JSON files
     html({       // Generate an HTML but use the correct hash
       title: 'Funcle',
       template: ({ attributes, files, meta, publicPath, title }) => {
@@ -120,8 +118,11 @@ export default {
         `;
       }
     }),
-    del({       // Clean up dist file
-      targets: 'dist/*'
-    })
+    isDev && serve({  // Serve and live reloading from debug mode
+      open: true,
+      contentBase: 'dist',
+      port: 3000
+    }),
+    isDev && livereload('dist')
   ]
 };

@@ -17,6 +17,16 @@ class FuncleHeader extends LitElement {
             flex-direction: column;
             align-items: center;
         }
+        @media (prefers-color-scheme: light) {
+            div {
+                color: black;
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            div {
+                color: white;
+            }
+        }
     `;
 
     render() {

@@ -26,7 +26,17 @@ class FuncleFooter extends LitElement {
             content: '·';
             margin-left: 0.5em;
             font-weight: bold;
-            folor: #888;
+        }
+
+        @media (prefers-color-scheme: light) {
+            footer {
+                color: #666;
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            footer {
+                color: #aaa;
+            }
         }
     `;
 
@@ -35,7 +45,7 @@ class FuncleFooter extends LitElement {
         <footer>
             <ul>
                 <li>Made by DJ PVSTV</li>
-                <li>v0.0.2</li>
+                <li>v0.0.3</li>
             </ul>
         </footer>
         `;
