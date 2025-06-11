@@ -1,10 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import {liquidGlassStyles} from '@src/styles/liquid-glass.js';
+import {liquidGlassDroid} from '@src/styles/liquid-glass-droid.js';
 
 class FuncleKeys extends LitElement {
 
     static styles = [
-        liquidGlassStyles,
+        /Android/i.test(navigator.userAgent) ? liquidGlassDroid : liquidGlassStyles,
         css`
             .keyboard {
                 display: flex;

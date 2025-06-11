@@ -22,7 +22,6 @@ export default {
     entryFileNames: 'bundle.[hash].js'
   },
   plugins: [
-    ,
     !isDev && del({       // Clean up dist file
       targets: 'dist/*'
     }),
@@ -50,11 +49,11 @@ export default {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>${title}</title>
     <base href="${baseHref}"/>
   </head>
-  <body style="margin: 0; padding: 0;">
+  <body style="margin: 0; padding: 0; touch-action: manipulation;">
     <svg style="display: none">
       <filter
           id="glass-distortion"

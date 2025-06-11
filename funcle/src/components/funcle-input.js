@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import {liquidGlassStyles} from '@src/styles/liquid-glass.js';
+import {liquidGlassDroid} from '@src/styles/liquid-glass-droid.js';
 
 class FuncleInputRow extends LitElement {
     static properties = {
@@ -13,7 +14,7 @@ class FuncleInputRow extends LitElement {
     };
 
     static styles = [
-        liquidGlassStyles,
+        /Android/i.test(navigator.userAgent) ? liquidGlassDroid : liquidGlassStyles,
         css`
     @font-face {
         font-family: 'Consolas';
