@@ -45,7 +45,7 @@ class FuncleFooter extends LitElement {
         <footer>
             <ul>
                 <li>Made by DJ PVSTV</li>
-                <li>v0.0.3</li>
+                <li>v0.0.4</li>
             </ul>
         </footer>
         `;

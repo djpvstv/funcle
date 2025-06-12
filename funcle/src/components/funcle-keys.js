@@ -40,22 +40,68 @@ class FuncleKeys extends LitElement {
                 button.key {
                     color: black;
                 }
+                div.wrong-key > div.liquidGlass-tint {
+                    background-color: rgba(96, 96, 96, 0.29);
+                }
+                div.wrong-key > div > button {
+                    color: rgba(200, 200, 200, 0.5);
+                }
+                div.right-key > div.liquidGlass-tint {
+                    background-color: rgba(96, 96, 96, 0.29);
+                }
+                div.right-key > div > button {
+                    color: rgba(200, 200, 200, 0.5);
+                }
             }
 
             @media (prefers-color-scheme: dark) {
                 button.key {
                     color: white;
                 }
+                div.wrong-key > div.liquidGlass-tint {
+                    background-color: rgba(96, 96, 96, 0.29);
+                }
+                div.wrong-key > div > button {
+                    color: rgba(200, 200, 200, 0.29);
+                }
+                div.right-key > div.liquidGlass-tint {
+                    background-color: rgba(255, 222, 42, 0.29);
+                }
+                div.right-key > div > button {
+                    color: rgb(255, 200, 68);
+                }
+                div.perfect-key > div.liquidGlass-tint {
+                    background-color: rgba(131, 235, 117, 0.42);
+                }
+                div.perfect-key > div > button {
+                    color: rgba(131, 235, 117, 0.42);
+                }
             }
         `];
 
     static properties = {
-        disabled: { type: Boolean }
+        attemptedKeys: { type: Array },
+        attemptedKeyState: { type: Array }
     }
 
     constructor () {
         super();
-        this.disabled = false;
+        this.attemptedKeys = [];
+        this.attemptedKeyState = [];
+    }
+
+    _hasBeenGuessed (key) {
+        return this.attemptedKeys.findIndex((k) => k === key.toLowerCase()) > -1;
+    }
+
+    _isKeyCorrect (key) {
+        if (!this._hasBeenGuessed(key)) return false;
+        return this.attemptedKeyState[this.attemptedKeys.findIndex((k) => k === key.toLowerCase())] === 1;
+    }
+
+    _isKeyPerfect (key) {
+        if (!this._hasBeenGuessed(key)) return false;
+        return this.attemptedKeyState[this.attemptedKeys.findIndex((k) => k === key.toLowerCase())] === 2;
     }
 
     _emitKey (key) {
@@ -70,14 +116,19 @@ class FuncleKeys extends LitElement {
         return html`
         <div class="row">
             ${keys.map(k => html`
-            <div class="liquidGlass-wrapper">
+            <div class="liquidGlass-wrapper
+                ${this._hasBeenGuessed(k) ? 'wrong-key' : ''}
+                ${this._isKeyCorrect(k) ? 'right-key' : ''}
+                ${this._isKeyPerfect(k) ? 'perfect-key' : ''}
+            ">
                 <div class="liquidGlass-effect"></div>
                 <div class="liquidGlass-tint"></div>
                 <div class="liquidGlass-shine"></div>
                 <div class="liquidGlass-text">
                     <button
-                        class="key ${opts.wide?.includes(k) ? 'wide' : ''}"
-                        ?disabled=${this.disabled}
+                        class="key
+                        ${opts.wide?.includes(k) ? 'wide' : ''}
+                        "
                         @click=${() => this._emitKey(k)}>
                         ${k}
                     </button>
