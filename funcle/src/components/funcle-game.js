@@ -185,30 +185,32 @@ class FuncleGame extends LitElement {
                 idx = this._pseudoRandomGen(numKeys);
                 this.code = gameKeys.six[idx].name;
                 this.href = `${gameKeys.six[idx].helpFolder}/${gameKeys.six[idx].href}`;
+                this.wordSet = new Set(gameKeys.six.map(w => w.name.toLowerCase()));
                 break;
             case 7:
                 numKeys = gameKeys.seven.length;
                 idx = this._pseudoRandomGen(numKeys);
                 this.code = gameKeys.seven[idx].name;
                 this.href = `${gameKeys.seven[idx].helpFolder}/${gameKeys.seven[idx].href}`;
-
+                this.wordSet = new Set(gameKeys.seven.map(w => w.name.toLowerCase()));
                 break;
             case 8:
                 numKeys = gameKeys.eight.length;
                 idx = this._pseudoRandomGen(numKeys);
                 this.code = gameKeys.eight[idx].name;
                 this.href = `${gameKeys.eight[idx].helpFolder}/${gameKeys.eight[idx].href}`;
+                this.wordSet = new Set(gameKeys.eight.map(w => w.name.toLowerCase()));
                 break;
             default:
                 numKeys = gameKeys.five.length;
                 idx = this._pseudoRandomGen(numKeys);
                 this.code = gameKeys.five[idx].name;
                 this.href = `${gameKeys.five[idx].helpFolder}/${gameKeys.five[idx].href}`;
+                this.wordSet = new Set(gameKeys.five.map(w => w.name.toLowerCase()));
                 break;
 
         }
         
-        this.wordSet = new Set(gameKeys.five.map(w => w.name.toLowerCase()));
         this.dictionaryReady = true;
         this.requestUpdate();
     }
