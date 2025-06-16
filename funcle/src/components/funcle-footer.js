@@ -30,7 +30,7 @@ class FuncleFooter extends LitElement {
 
         @media (prefers-color-scheme: light) {
             footer {
-                color: #666;
+                color: #333;
             }
         }
         @media (prefers-color-scheme: dark) {

@@ -14,7 +14,7 @@ class FuncleInputRow extends LitElement {
     };
 
     static styles = [
-        /Android/i.test(navigator.userAgent) ? liquidGlassDroid : liquidGlassStyles,
+        /Android/i.test(navigator.userAgent) ? liquidGlassStyles : liquidGlassStyles,
         css`
     @font-face {
         font-family: 'Consolas';
@@ -75,16 +75,16 @@ class FuncleInputRow extends LitElement {
             background-color:rgba(238, 238, 228, 0.51);
         }
         .square.allCorrect {
-            background-color: rgba(131, 235, 117, 0.42);
+            background-color: rgba(116, 225, 101, 0.48);
         }
         .square.correctLetter {
-            background-color: rgba(255, 227, 150, 0.4);
+            background-color: rgba(225, 212, 7, 0.6);
         }
         .square.incorrect {
-            background-color: rgba(200, 200, 200, 0.5);
+            background-color: rgba(140, 140, 140, 0.5);
         }
         .square.error {
-            background-color: rgba(117, 20, 20, 0.4);
+            background-color: rgba(185, 6, 6, 0.36);
         }
     }
     @media (prefers-color-scheme: dark) {
@@ -130,6 +130,11 @@ class FuncleInputRow extends LitElement {
         this._handleKeyFunc = this._handleKeyFromKeyboard.bind(this);
     }
 
+    reset () {
+        this.letters = Array(this.numberOfLetters).fill("");
+        this.activeIndex = 0;
+    }
+
     connectedCallback() {
         super.connectedCallback();
         this.letters = Array(this.numberOfLetters).fill("");
@@ -153,6 +158,9 @@ class FuncleInputRow extends LitElement {
 
     _handleKeyFromKeyboard(e) {
         this._handleKey(e.key);
+
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     _handleKey(e) {
@@ -161,7 +169,7 @@ class FuncleInputRow extends LitElement {
 
         const key = e.toLowerCase();
         if (/^[a-z0-9]$/.test(key)) {
-            if (this.activeIndex < 5) {
+            if (this.activeIndex < this.numberOfLetters) {
                 this.letters[this.activeIndex] = key;
                 this.letters = [...this.letters]; // reassign to trigger re-render
                 this.activeIndex = (this.activeIndex + 1);
@@ -207,7 +215,6 @@ class FuncleInputRow extends LitElement {
                 <div class="grid">
                 ${this.letters.map((letter, i) => html`
                     <div class="liquidGlass-wrapper">
-                        <div class="liquidGlass-effect"></div>
                         <div class="liquidGlass-tint"></div>
                         <div class="liquidGlass-shine"></div>
                         <div class="liquidGlass-text">
