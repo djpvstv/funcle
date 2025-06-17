@@ -308,9 +308,21 @@ class FuncleGame extends LitElement {
 
     _pseudoRandomGen (max) {
         const today = new Date().toISOString().slice(0,10); // Just get MDY
-        const hash = [...today].reduce((h,c) => (h * 31 + c.charCodeAt(0)) >> 0, 0);
 
-        return (hash % max) + 1;
+        let hash = 0;
+        for (let i = 0; i < today.length; i++) {
+            hash = ((hash << 5) - hash) + today.charCodeAt(i);
+            hash |= 0;
+        }
+        const seed = hash >>> 0;
+
+        // Mullberry 32
+        let t = seed + 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        const rng = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+
+        return Math.round(rng * (max));
     }
 
     _showDialog () {
